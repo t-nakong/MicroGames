@@ -28,18 +28,22 @@ namespace Photon.Pun.MicroGames
 
         private Dictionary<int, GameObject> _playerListEntries;
         private string _playerName;
-        private string _playerTeam;
+        private string _playerTeam = "red";
         private string _specificGame = "";
 
         #region UNITY
 
-        private void SetPlayerName()
+        public void SetPlayerName(string name)
         {
-            _playerName = "Player" + Random.Range(1000,10000);
+            Debug.Log("set name to " + name);
+
+            _playerName = name;
         }
-        private void SetPlayerTeam()
+        public void SetPlayerTeam(string team)
         {
-            _playerTeam = "red";
+            Debug.Log("set team to " + team);
+
+            _playerTeam = team;
         }
         private bool CheckForPlayers()
         {
@@ -52,19 +56,17 @@ namespace Photon.Pun.MicroGames
             LobbyPanel.SetActive(activePanel.Equals(LobbyPanel.name));
         }
 
-        private void Start()
+        void Start()
         {
             StartGameButton.interactable = false;
             SetActivePanel(SelectionPanel.name);
         }
 
-        public void Awake()
+        void Awake()
         {
+            _playerName = "Player" + Random.Range(1000, 10000);
+
             PhotonNetwork.AutomaticallySyncScene = true;
-
-            SetPlayerName();
-            SetPlayerTeam();
-
             PhotonNetwork.LocalPlayer.NickName = _playerName;
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -90,7 +92,7 @@ namespace Photon.Pun.MicroGames
 
         public override void OnJoinedRoom()
         {
-            Debug.Log("joined room");
+            Debug.Log("joined room: " +PhotonNetwork.CurrentRoom.Name);
             SetActivePanel(LobbyPanel.name);
 
             if (CheckForPlayers())
@@ -129,12 +131,23 @@ namespace Photon.Pun.MicroGames
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            
+            SearchingText.SetActive(false);
+
+            PlayerOneText.text = PhotonNetwork.PlayerList[0].NickName;
+            PlayerOneImage.sprite = PlayerOneSprite;
+            PlayerTwoText.text = _playerName;
+            PlayerTwoImage.sprite = PlayerOneSprite;
+
+            PlayerTwoImage.gameObject.SetActive(true);
+            StartGameButton.interactable = true;
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            
+            SearchingText.SetActive(true);
+
+            PlayerTwoImage.gameObject.SetActive(false);
+            StartGameButton.interactable = false;
         }
 
         #endregion
@@ -198,6 +211,7 @@ namespace Photon.Pun.MicroGames
             if (PhotonNetwork.InRoom)
             {
                 PhotonNetwork.LeaveRoom();
+                _specificGame = "";
             }
 
             SetActivePanel(SelectionPanel.name);
