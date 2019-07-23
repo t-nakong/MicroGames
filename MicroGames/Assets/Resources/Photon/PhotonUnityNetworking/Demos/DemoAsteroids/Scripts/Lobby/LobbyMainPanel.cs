@@ -40,6 +40,7 @@ namespace Photon.Pun.Demo.Asteroids
         private Dictionary<string, RoomInfo> cachedRoomList;
         private Dictionary<string, GameObject> roomListEntries;
         private Dictionary<int, GameObject> playerListEntries;
+        private bool _specificGame;
 
         #region UNITY
 
@@ -82,13 +83,10 @@ namespace Photon.Pun.Demo.Asteroids
             SetActivePanel(SelectionPanel.name);
         }
 
-        public override void OnJoinRoomFailed(short returnCode, string message)
-        {
-            SetActivePanel(SelectionPanel.name);
-        }
-
         public override void OnJoinRandomFailed(short returnCode, string message)
         {
+            SetActivePanel(SelectionPanel.name);
+
             string roomName = "Room " + Random.Range(1000, 10000);
 
             RoomOptions options = new RoomOptions {MaxPlayers = 8};
