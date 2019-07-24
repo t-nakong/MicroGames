@@ -260,7 +260,6 @@
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginContract.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginContractKey.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginManager.cs" />
-     <Compile Include="Assets\Scripts\General\MiniGame.cs" />
      <Compile Include="Assets\Scripts\Main\RoomManager.cs" />
      <Compile Include="Assets\Scripts\Test\Move Player.cs" />
      <None Include="Assets\Resources\PlayFabSdk\link.xml" />

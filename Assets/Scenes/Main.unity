@@ -588,12 +588,13 @@ MonoBehaviour:
   SelectionPanel: {fileID: 727765769}
   LobbyPanel: {fileID: 682205420}
   PlayerOneImage: {fileID: 2066518151}
-  PlayerOneSprite: {fileID: 0}
+  PlayerOneSprite: {fileID: 21300000, guid: d12fab6061dc1af49837ef737b9e7296, type: 3}
   PlayerOneText: {fileID: 1279316333}
   PlayerTwoImage: {fileID: 607309764}
-  PlayerTwoSprite: {fileID: 0}
+  PlayerTwoSprite: {fileID: 21300000, guid: b55f50bd064947e449d3e186fec23a97, type: 3}
   PlayerTwoText: {fileID: 1004373793}
   SearchingText: {fileID: 748953199}
+  BackButton: {fileID: 0}
   StartGameButton: {fileID: 722756351}
   MiniGames:
   - Test
@@ -1103,7 +1104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &727765770
 RectTransform:
   m_ObjectHideFlags: 0

@@ -21,6 +21,7 @@ namespace Photon.Pun.MicroGames
         public Sprite PlayerTwoSprite;
         public Text PlayerTwoText;
         public GameObject SearchingText;
+        public GameObject BackButton;
         public Button StartGameButton;
 
         [Header("Games")]
@@ -102,7 +103,7 @@ namespace Photon.Pun.MicroGames
                 PlayerOneText.text = PhotonNetwork.PlayerList[0].NickName;
                 PlayerOneImage.sprite = PlayerOneSprite;
                 PlayerTwoText.text = _playerName;
-                PlayerTwoImage.sprite = PlayerOneSprite;
+                PlayerTwoImage.sprite = PlayerTwoSprite;
 
                 PlayerTwoImage.gameObject.SetActive(true);
                 StartGameButton.interactable = true;
@@ -132,11 +133,10 @@ namespace Photon.Pun.MicroGames
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             SearchingText.SetActive(false);
+            BackButton.SetActive(false);
 
-            PlayerOneText.text = PhotonNetwork.PlayerList[0].NickName;
-            PlayerOneImage.sprite = PlayerOneSprite;
-            PlayerTwoText.text = _playerName;
-            PlayerTwoImage.sprite = PlayerOneSprite;
+            PlayerTwoText.text = PhotonNetwork.PlayerList[1].NickName;
+            PlayerTwoImage.sprite = PlayerTwoSprite;
 
             PlayerTwoImage.gameObject.SetActive(true);
             StartGameButton.interactable = true;
