@@ -98,7 +98,7 @@ public class PlayFabLogin : MonoBehaviour
     }
 
     // why do we need EntityToken AND SessionTicket?
-    void OnLoginSuccess(LoginResult result)
+    private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log($"PLAYER {SystemInfo.deviceUniqueIdentifier} succesfully logged on");
         Debug.Log($"Player ID {result.PlayFabId} is device unique id");
@@ -123,7 +123,7 @@ public class PlayFabLogin : MonoBehaviour
         // could have UI display options right after this
     }
 
-    void OnLoginFailure(PlayFabError error)
+    private void OnLoginFailure(PlayFabError error)
     {
         Debug.LogError("Debug info:");
         Debug.LogError(error.GenerateErrorReport());
