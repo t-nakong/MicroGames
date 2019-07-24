@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayFab.ClientModels;
 using PlayFab;
-using Newtonsoft.Json.Linq;
+//using Newtonsoft.Json.Linq;
 
 public enum MicrogameEvents : SByte
 {
@@ -22,6 +22,11 @@ public enum MicrogameEvents : SByte
     UserLostScore
 }
 
+public enum MicrogameModes : SByte
+{
+    Original
+}
+
 public enum PlayFabAuthorityLevel : byte
 {
     Character,
@@ -30,12 +35,16 @@ public enum PlayFabAuthorityLevel : byte
     Title
 }
 
-public class PlayFabEventClient : MonoBehaviour
+public class PlayFabEventClient
 {
     // Start is called before the first frame update
     void Start()
     {
-
+        //PlayFabLogin pfLogin = GetComponent("PlayFabLogin") as PlayFabLogin;
+        //while (!pfLogin.LoginSuccessful) { }
+        //Debug.Log("Can now submit login event")
+        //PostPlayStreamEvent(MicrogameEvents.UserLoggedOn, null,
+        //    PlayFabAuthorityLevel.Player);
     }
 
     // Update is called once per frame
@@ -49,10 +58,9 @@ public class PlayFabEventClient : MonoBehaviour
     /// </summary>
     /// <param name="eventType"></param>
     /// <param name="data"></param>
-    public bool PostPlayStreamEvent(object eventType, in Dictionary<string, object> data, object authorityLevel)
+    public bool PostPlayStreamEvent(MicrogameEvents eventType, in Dictionary<string, object> data, PlayFabAuthorityLevel authorityLevel)
     {
-        if (eventType == null || data == null  || !(eventType is SByte) || 
-            !(Enum.IsDefined(typeof(MicrogameEvents), eventType)) || !(authorityLevel is byte))
+        if (!(Enum.IsDefined(typeof(MicrogameEvents), eventType)))
         {
             Debug.LogError("Invalid argument submitted");
             return false;
@@ -93,10 +101,9 @@ public class PlayFabEventClient : MonoBehaviour
     /// </summary>
     /// <param name="eventType"></param>
     /// <param name="data"></param>
-    public bool PostTelemetryEvent(object eventType, in Dictionary<string, object> data, object authorityLevel)
+    public bool PostTelemetryEvent(MicrogameEvents eventType, in Dictionary<string, object> data, PlayFabAuthorityLevel authorityLevel)
     {
-        if (eventType == null || data == null || !(eventType is SByte) ||
-            !(Enum.IsDefined(typeof(MicrogameEvents), eventType)) || !(authorityLevel is byte))
+        if (!(Enum.IsDefined(typeof(MicrogameEvents), eventType)))
         {
             Debug.LogError("Invalid argument submitted");
             return false;
@@ -121,8 +128,8 @@ public class PlayFabEventClient : MonoBehaviour
             {
                 { "Mode", mode },
                 { "SessionId", sessionId },
-                { "RedTeam", new JArray(redTeam) },
-                { "BlueTeam", new JArray(blueTeam) }
+                { "RedTeam", /*new JArray(redTeam)*/ redTeam.ToArray() },
+                { "BlueTeam", /*new JArray(blueTeam)*/ blueTeam.ToArray() }
             },
             PlayFabAuthorityLevel.Title))
         {
@@ -130,15 +137,15 @@ public class PlayFabEventClient : MonoBehaviour
         }
     }
 
-    public void PostCompetitionFinishedEvent(in string mode, in string sessionId, List<string> redTeam, in List<string> blueTeam)
+    public void PostCompetitionFinishedEvent(in string mode, in string sessionId, in List<string> redTeam, in List<string> blueTeam)
     {
         if (!PostPlayStreamEvent(MicrogameEvents.CompetitionStarted, 
             new Dictionary<string, object>()
             {
                 { "Mode", mode },
                 { "SessionId", sessionId },
-                { "RedTeam", new JArray(redTeam) },
-                { "BlueTeam", new JArray(blueTeam) }
+                { "RedTeam", /*new JArray(redTeam)*/ redTeam.ToArray() },
+                { "BlueTeam", /*new JArray(blueTeam)*/ blueTeam.ToArray() }
             },
             PlayFabAuthorityLevel.Title))
         {
@@ -146,7 +153,9 @@ public class PlayFabEventClient : MonoBehaviour
         }
     }
 
-    private void OnEventPostSuccess(WriteEventResponse response) { 
+    private void OnEventPostSuccess(WriteEventResponse response)
+    {
+        Debug.Log($"Successful event {response.EventId} written");
     }
 
     private void OnEventPostFailure(PlayFabError error)

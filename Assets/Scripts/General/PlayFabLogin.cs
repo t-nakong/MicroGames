@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using PlayFab;
 using PlayFab.ClientModels;
@@ -10,6 +11,11 @@ public class PlayFabUser
     public Dictionary<string, object> Data;
     public List<ItemInstance> Inventory;
     public Dictionary<string, int> VirtualCurrency;
+
+    //public string ToString()
+    //{
+    //    $"Data: {StartingUser.Data.Select(pair => $"{pair.Key}: {pair.Value.ToString()}")} "
+    //}
 }
 
 /// <summary>
@@ -22,6 +28,12 @@ public class PlayFabLogin : MonoBehaviour
     public EntityKey EntityKey { get; private set; } = null;
     public PlayFabUser StartingUser { get; private set; } = null;
     public Dictionary<string, string> StartingTitleData { get; private set; } = null;
+    public bool LoginSuccessful {get; private set;} = false;
+
+    public void TestStart()
+    {
+        Start();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -59,13 +71,14 @@ public class PlayFabLogin : MonoBehaviour
     void LoginWithDeviceId()
     {
         // LoginWithAndroidDeviceId, then if user doesn't have account, prompt them to create one (SHOULD IMPLEMENT LATER)
+
         PlayFabClientAPI.LoginWithAndroidDeviceID(
             request: new LoginWithAndroidDeviceIDRequest
             {
                 AndroidDevice = SystemInfo.deviceModel,
                 AndroidDeviceId = SystemInfo.deviceUniqueIdentifier,
                 CreateAccount = true,
-                InfoRequestParameters =
+                InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
                 {
                     GetCharacterInventories = false,
                     GetCharacterList = false,
@@ -101,9 +114,15 @@ public class PlayFabLogin : MonoBehaviour
     private void OnLoginSuccess(LoginResult result)
     {
         Debug.Log($"PLAYER {SystemInfo.deviceUniqueIdentifier} succesfully logged on");
-        Debug.Log($"Player ID {result.PlayFabId} is device unique id");
+        //Debug.Log($"Player ID {result.PlayFabId} is device unique id");
+        if (result.NewlyCreated) { Debug.Log("Player was created"); }
         EntityKey = result.EntityToken.Entity;
-        StartingUser = new PlayFabUser { Id = result.PlayFabId };
+        StartingUser = new PlayFabUser {
+            Id = result.PlayFabId,
+            Data = new Dictionary<string, object>(),
+            Inventory = new List<ItemInstance>(),
+            VirtualCurrency = new Dictionary<string, int>()
+        };
         StartingTitleData = result.InfoResultPayload.TitleData;
 
         // if existing player, fill out the latest player data
@@ -117,6 +136,17 @@ public class PlayFabLogin : MonoBehaviour
             StartingUser.VirtualCurrency = result.InfoResultPayload.UserVirtualCurrency;
             StartingUser.Inventory = result.InfoResultPayload.UserInventory;
         }
+
+        Debug.Log($"Data: {StartingUser.Data.ToString()}");
+        Debug.Log($"VC: {StartingUser.VirtualCurrency.ToString()}");
+        Debug.Log($"Inventory: {StartingUser.Inventory.ToString()}");
+        LoginSuccessful = true;
+
+        PlayFabEventClient eventClient = new PlayFabEventClient();
+
+
+        eventClient.PostPlayStreamEvent(MicrogameEvents.UserLoggedOn, null,
+            PlayFabAuthorityLevel.Player);
 
         // thought: we should probably have client update users' data after every game
 
