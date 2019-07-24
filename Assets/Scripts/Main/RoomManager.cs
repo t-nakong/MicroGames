@@ -14,13 +14,12 @@ namespace Photon.Pun.MicroGames
 
         [Header("Lobby Panel")]
         public GameObject LobbyPanel;
-        public Image PlayerOneImage;
-        public Sprite PlayerOneSprite;
-        public Text PlayerOneText;
-        public Image PlayerTwoImage;
-        public Sprite PlayerTwoSprite;
-        public Text PlayerTwoText;
-        public GameObject SearchingText;
+        public Image PlayerRedImage;
+        public Text PlayerRedText;
+        public Image PlayerBlueImage;
+        public Text PlayerBlueText;
+        public GameObject SearchingRedText;
+        public GameObject SearchingBlueText;
         public GameObject BackButton;
         public Button StartGameButton;
 
@@ -30,9 +29,13 @@ namespace Photon.Pun.MicroGames
         private Dictionary<int, GameObject> _playerListEntries;
         private string _playerName;
         private string _playerTeam = "red";
+        private Sprite _playerSprite;
+        private Sprite _opponentSprite;
         private string _specificGame = "";
 
         #region UNITY
+
+        #region PUBLIC
 
         public void SetPlayerName(string name)
         {
@@ -46,6 +49,11 @@ namespace Photon.Pun.MicroGames
 
             _playerTeam = team;
         }
+
+        #endregion
+
+        #region PRIVATE
+
         private bool CheckForPlayers()
         {
             return PhotonNetwork.CurrentRoom.PlayerCount == 2;
@@ -57,10 +65,24 @@ namespace Photon.Pun.MicroGames
             LobbyPanel.SetActive(activePanel.Equals(LobbyPanel.name));
         }
 
+        private void ResetLobby()
+        {
+            PlayerRedImage.gameObject.SetActive(false);
+            PlayerBlueImage.gameObject.SetActive(false);
+            PlayerRedText.gameObject.SetActive(true);
+            PlayerBlueText.gameObject.SetActive(true);
+            SearchingRedText.SetActive(true);
+            SearchingBlueText.SetActive(true);
+            BackButton.SetActive(true);
+            StartGameButton.interactable = false;
+        }
+
+        #endregion
+
         void Start()
         {
-            StartGameButton.interactable = false;
             SetActivePanel(SelectionPanel.name);
+            ResetLobby();
         }
 
         void Awake()
@@ -94,25 +116,53 @@ namespace Photon.Pun.MicroGames
         public override void OnJoinedRoom()
         {
             Debug.Log("joined room: " +PhotonNetwork.CurrentRoom.Name);
-            SetActivePanel(LobbyPanel.name);
+            Debug.Log(PhotonNetwork.PlayerList.Length + " players in the room");
 
             if (CheckForPlayers())
             {
-                SearchingText.SetActive(false);
+                Debug.Log("enough players have joined");
+                if (_playerTeam.Equals("red"))
+                {
+                    
+                    PlayerRedText.text = _playerName;
+                    //PlayerRedImage.sprite = _playerSprite;
+                    PlayerBlueText.text = PhotonNetwork.PlayerList[0].NickName;
+                    //PlayerBlueImage.sprite = _opponentSprite;
+                }
+                else
+                {
+                    PlayerBlueText.text = _playerName;
+                    //PlayerBlueImage.sprite = _playerSprite;
+                    PlayerRedText.text = PhotonNetwork.PlayerList[0].NickName;
+                    //PlayerRedImage.sprite = _opponentSprite;
+                }
+                SearchingRedText.SetActive(false);
+                SearchingBlueText.SetActive(false);
+                PlayerRedImage.gameObject.SetActive(true);
+                PlayerBlueImage.gameObject.SetActive(true);
 
-                PlayerOneText.text = PhotonNetwork.PlayerList[0].NickName;
-                PlayerOneImage.sprite = PlayerOneSprite;
-                PlayerTwoText.text = _playerName;
-                PlayerTwoImage.sprite = PlayerTwoSprite;
-
-                PlayerTwoImage.gameObject.SetActive(true);
                 StartGameButton.interactable = true;
             }
             else
             {
-                PlayerOneText.text = _playerName;
-                PlayerOneImage.sprite = PlayerOneSprite;
+                Debug.Log("not enough players have joined");
+
+                if (_playerTeam.Equals("red"))
+                {
+                    PlayerRedText.text = _playerName;
+                    //PlayerRedImage.sprite = _playerSprite;
+                    SearchingRedText.SetActive(false);
+                    PlayerRedImage.gameObject.SetActive(true);
+                }
+                else
+                {
+                    PlayerBlueText.text = _playerName;
+                    //PlayerBlueImage.sprite = _playerSprite;
+                    SearchingBlueText.SetActive(false);
+                    PlayerBlueImage.gameObject.SetActive(true);
+                }
             }
+            SetActivePanel(LobbyPanel.name);
 
             /*
             Hashtable props = new Hashtable
@@ -128,25 +178,42 @@ namespace Photon.Pun.MicroGames
             Debug.Log("left room");
 
             SetActivePanel(SelectionPanel.name);
+            ResetLobby();
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            SearchingText.SetActive(false);
+            if (_playerTeam.Equals("red"))
+            {
+                PlayerBlueText.text = PhotonNetwork.PlayerList[1].NickName;
+                //PlayerBlueImage.sprite = _opponentSprite;
+                SearchingBlueText.SetActive(false);
+                PlayerBlueImage.gameObject.SetActive(true);
+            }
+            else
+            {
+                PlayerRedText.text = PhotonNetwork.PlayerList[1].NickName;
+                //PlayerRedImage.sprite = _opponentSprite;
+                SearchingRedText.SetActive(false);
+                PlayerRedImage.gameObject.SetActive(true);
+            }
             BackButton.SetActive(false);
-
-            PlayerTwoText.text = PhotonNetwork.PlayerList[1].NickName;
-            PlayerTwoImage.sprite = PlayerTwoSprite;
-
-            PlayerTwoImage.gameObject.SetActive(true);
             StartGameButton.interactable = true;
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            SearchingText.SetActive(true);
-
-            PlayerTwoImage.gameObject.SetActive(false);
+            if (_playerTeam.Equals("red"))
+            {
+                SearchingBlueText.SetActive(true);
+                PlayerBlueImage.gameObject.SetActive(false);
+            }
+            else
+            {
+                SearchingRedText.SetActive(true);
+                PlayerRedImage.gameObject.SetActive(false);
+            }
+            BackButton.SetActive(true);
             StartGameButton.interactable = false;
         }
 

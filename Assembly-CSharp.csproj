@@ -260,6 +260,7 @@
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginContract.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginContractKey.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginManager.cs" />
+     <Compile Include="Assets\Scripts\General\Timer.cs" />
      <Compile Include="Assets\Scripts\Main\RoomManager.cs" />
      <Compile Include="Assets\Scripts\Test\Move Player.cs" />
      <None Include="Assets\Resources\PlayFabSdk\link.xml" />
@@ -271,14 +272,8 @@
      <None Include="Assets\Resources\Photon\PhotonUnityNetworking\Demos\Shared Assets\Skin\3dText.shader" />
      <None Include="Assets\Resources\Photon\PhotonUnityNetworking\readme.txt" />
      <None Include="Assets\Resources\Photon\PhotonUnityNetworking\changelog.txt" />
- <Reference Include="Unity.Timeline.Editor">
- <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
- </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Timeline">
- <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.CollabProxy.Editor">
  <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>

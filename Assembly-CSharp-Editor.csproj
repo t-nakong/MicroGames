@@ -89,14 +89,8 @@
      <Compile Include="Assets\Resources\PlayFabEditorExtensions\Editor\Scripts\Utils\PlayFabGuiFieldHelper.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Editor\PlayFabHelp.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Models\Editor\MakeSharedSettingsObj.cs" />
- <Reference Include="Unity.Timeline.Editor">
- <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
- </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Timeline">
- <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.CollabProxy.Editor">
  <HintPath>C:/Users/t-nakong/Documents/GitHub/MicroGames/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
