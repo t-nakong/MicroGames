@@ -1,45 +1,89 @@
 # =============== #
+
 # Unity generated #
+
 # =============== #
-MicroGames/[Tt]emp/
-MicroGames/[Oo]bj/
-MicroGames/[Bb]uild
-MicroGames/[Bb]uilds/
-MicroGames/[Ll]ibrary/
-MicroGames/sysinfo.txt
-MicroGames/*.stackdump
-MicroGames/Assets/AssetStoreTools*
-MicroGames/*.apk
-MicroGames/*.unitypackage
+
+[Tt]emp/
+
+[Oo]bj/
+
+[Bb]uild
+
+/[Bb]uilds/
+
+/[Ll]ibrary/
+
+sysinfo.txt
+
+*.stackdump
+
+/Assets/AssetStoreTools*
+
+*.apk
+
+*.unitypackage
+
  
+
 # ===================================== #
+
 # Visual Studio / MonoDevelop generated #
+
 # ===================================== #
-MicroGames/[Ee]xported[Oo]bj/
-MicroGames/.vs/
-MicroGames/*.userprefs
-MicroGames/*.csproj
-MicroGames/*.pidb
-MicroGames/*.pidb.meta
-MicroGames/*.suo
-MicroGames/*.sln*
-MicroGames/*.user
-MicroGames/*.unityproj
-MicroGames/*.booproj
-MicroGames/.consulo/
-MicroGames/*.tmp
-MicroGames/*.svd
+
+[Ee]xported[Oo]bj/
+
+.vs/
+
+/*.userprefs
+
+/*.csproj
+
+/*.pidb
+
+*.pidb.meta
+
+/*.suo
+
+/*.sln*
+
+/*.user
+
+/*.unityproj
+
+/*.booproj
+
+.consulo/
+
+/*.tmp
+
+/*.svd
+
  
+
 # ============ #
+
 # OS generated #
+
 # ============ #
+
 .DS_Store*
+
 ._*
+
 .Spotlight-V100
+
 .Trashes
+
 Icon?
+
 ehthumbs.db
+
 [Tt]humbs.db
+
 [Dd]esktop.ini
+
 Corridor/Library/ShaderCache/
+
 Corridor/Library/metadata/
