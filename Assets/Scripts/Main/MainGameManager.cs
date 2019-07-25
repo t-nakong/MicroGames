@@ -175,14 +175,6 @@ namespace Photon.Pun.MicroGames
             }
             GameNameText.text = PhotonNetwork.CurrentRoom.Name.Split(new char[] { ' ' })[0].ToUpper();
             SetActivePanel(LobbyPanel.name);
-
-            
-            Hashtable props = new Hashtable
-            {
-                {GalagaManager.PLAYER_TEAM, PlayerTeam}
-            };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
-            
         }
 
         public override void OnLeftRoom()

@@ -10,17 +10,30 @@ namespace Photon.Pun.MicroGames
 {
     public class GalagaManager : MonoBehaviourPunCallbacks
     {
-        public const string PLAYER_TEAM = "red";
-        public string Team;
+        public string Team = "red";
         public GalagaPlayer[] Players;
 
+        [Header("UI")]
+        public GameObject InstructionPanel;
+        public Button StartGameButton;
+
         private GalagaPlayer _player;
+        private bool _gameStarted;
+
+        public void StartGame()
+        {
+            _gameStarted = true;
+            InstructionPanel.SetActive(false);
+        }
 
         // Start is called before the first frame update
         void Start()
         {
             Debug.Log("started game\n\n");
             Debug.Log(PhotonNetwork.CurrentRoom.Name);
+
+            StartGameButton.interactable = false;
+            InstructionPanel.SetActive(true);
 
             PlayFabClientAPI.GetUserData(new GetUserDataRequest
             {
@@ -32,38 +45,35 @@ namespace Photon.Pun.MicroGames
                 {
                     Team = request.Data["Team"].Value;
                     Debug.Log("player is on " + Team + " team");
+                    if (Team.Equals("red"))
+                    {
+                        _player = Players[0];
+                    }
+                    else
+                    {
+                        _player = Players[1];
+                    }
+                    StartGameButton.interactable = true;
                 }
                 else
                 {
                     Debug.Log("does not contain teams key");
                 }
-            }, null);
-
-            //Debug.Log(PLAYER_TEAM);
-            if (Team.Equals("red"))
-            {
-                _player = Players[0];
-            }
-            else
-            {
-                _player = Players[1];
-            }
+            }, null);            
         }
 
         // Update is called once per frame
         void Update()
         {
-            /*
-            Touch touch = Input.GetTouch(0);
-            _player.Position = touch.position;
-            */
+            if (_gameStarted)
+            {
+                float h = Input.GetAxis("Horizontal");
 
-            float h = Input.GetAxis("Horizontal");
+                Vector3 tempVect = new Vector3(h, 0, 0);
+                tempVect = tempVect.normalized * _player.Speed * Time.deltaTime;
 
-            Vector3 tempVect = new Vector3(h, 0, 0);
-            tempVect = tempVect.normalized * _player.Speed * Time.deltaTime;
-
-            _player.gameObject.GetComponent<RectTransform>().localPosition += tempVect;
+                _player.gameObject.GetComponent<RectTransform>().localPosition += tempVect;
+            }
         }
 
         #region PUN CALLBACKS
