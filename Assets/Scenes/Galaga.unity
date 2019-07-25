@@ -403,7 +403,7 @@ MonoBehaviour:
   Synchronization: 0
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 1376933645}
+  - {fileID: 1376933647}
   viewIdField: 2
   InstantiationId: 2
   isRuntimeInstantiated: 0
@@ -991,7 +991,7 @@ MonoBehaviour:
   Synchronization: 0
   OwnershipTransfer: 0
   ObservedComponents:
-  - {fileID: 2097478431}
+  - {fileID: 2097478433}
   viewIdField: 1
   InstantiationId: 1
   isRuntimeInstantiated: 0

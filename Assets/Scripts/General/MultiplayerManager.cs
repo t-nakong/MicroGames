@@ -29,6 +29,7 @@ namespace Photon.Pun.MicroGames
         [PunRPC]
         public void StartGame()
         {
+            Debug.Log("RPC starting game");
             _gameStarted = true;
             InstructionPanel.SetActive(false);
         }
