@@ -262,6 +262,8 @@
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginManager.cs" />
      <Compile Include="Assets\Scripts\Galaga\GalagaManager.cs" />
      <Compile Include="Assets\Scripts\Galaga\GalagaPlayer.cs" />
+     <Compile Include="Assets\Scripts\General\MultiPlayer.cs" />
+     <Compile Include="Assets\Scripts\General\MultiplayerManager.cs" />
      <Compile Include="Assets\Scripts\General\Timer.cs" />
      <Compile Include="Assets\Scripts\Main\MainGameManager.cs" />
      <Compile Include="Assets\Scripts\PlayFab\PlayFabEventClient.cs" />
