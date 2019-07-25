@@ -23,6 +23,7 @@ namespace Photon.Pun.MicroGames
 
         public void ClickStartGame()
         {
+            PhotonView photonView = PhotonView.Get(this);
             photonView.RPC("RPC_StartGame", RpcTarget.AllViaServer);
         }
 
