@@ -260,11 +260,12 @@
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginContract.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginContractKey.cs" />
      <Compile Include="Assets\Resources\PlayFabSdk\Shared\Public\PluginManager.cs" />
+     <Compile Include="Assets\Scripts\Galaga\GalagaManager.cs" />
+     <Compile Include="Assets\Scripts\Galaga\GalagaPlayer.cs" />
      <Compile Include="Assets\Scripts\General\Timer.cs" />
      <Compile Include="Assets\Scripts\Main\MainGameManager.cs" />
      <Compile Include="Assets\Scripts\PlayFab\PlayFabEventClient.cs" />
      <Compile Include="Assets\Scripts\PlayFab\PlayFabLogin.cs" />
-     <Compile Include="Assets\Scripts\Test\Move Player.cs" />
      <None Include="Assets\Resources\PlayFabSdk\link.xml" />
      <None Include="Assets\Resources\Photon\PhotonUnityNetworking\link.xml" />
      <None Include="Assets\Resources\Photon\PhotonUnityNetworking\Demos\DemoSlotRacer\Kenney Assets\Copyrights.txt" />
