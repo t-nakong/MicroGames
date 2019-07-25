@@ -41,8 +41,10 @@ public class MinesweeperManager : MonoBehaviour
     public static float totalTime = 180;
     // Uncover all Mines
 
-    public void onClick(Element e)
+    public void onClick(GameObject tile)
     {
+        Element e = tile.GetComponent<Element>();
+
         if (!gameOver)
         {
            if (isFlagging) // In flagging mode
@@ -119,33 +121,47 @@ public class MinesweeperManager : MonoBehaviour
             //}
         }
     }
-    private static void uncoverMines()
+    //    private static void uncoverMines()
+    //    {
+    //        foreach (Element elem in elements)
+    //        {
+    //            if (elem.mine) elem.loadTexture(0);
+    //        }
+    //        isOpened = true;
+    //    }
+
+    //    private static void sendAction(int time)
+    //    {
+    //        // TODO sending interactions to enemy
+    //        enemyStatus = "Affected";
+    //    }
+
+    //    private static bool isFinished()
+    //    {
+    //        // Try to find a covered element that is no mine
+    //        foreach (Element elem in elements)
+    //            if (elem.isCovered() && !elem.mine)
+    //                return false;
+    //        // There are none => all are mines => game won.
+    //        gameOver = true;
+    //        return true;
+    //    }
+
+    private void ReRoll(Element elem)
     {
-        foreach (Element elem in elements)
-        {
-            if (elem.mine) elem.loadTexture(0);
-        }
-        isOpened = true;
+        // Randomly decide if it's a mine or not
+        elem.mine = Random.value < density;
+        elem.flag = false;
+        elem.covered = true;
+        // Register in Grid
+        int x = (int)transform.position.x;
+        int y = (int)transform.position.y;
+        GetComponent<SpriteRenderer>().sprite = defaultTexture;
+
+        PlayField.elements[x, y] = this;
     }
 
-    private static void sendAction(int time)
-    {
-        // TODO sending interactions to enemy
-        enemyStatus = "Affected";
-    }
-
-    private static bool isFinished()
-    {
-        // Try to find a covered element that is no mine
-        foreach (Element elem in elements)
-            if (elem.isCovered() && !elem.mine)
-                return false;
-        // There are none => all are mines => game won.
-        gameOver = true;
-        return true;
-    }
-
-    public static bool flagAt(int x, int y)
+    private static bool flagAt(int x, int y)
     {
         // Coordinates in range? Then check for flag.
         if (x >= 0 && y >= 0 && x < w && y < h)
@@ -154,7 +170,7 @@ public class MinesweeperManager : MonoBehaviour
     }
 
     // Find out if a mine is at the coordinates
-    public static bool mineAt(int x, int y)
+    private static bool mineAt(int x, int y)
     {
         // Coordinates in range? Then check for mine.
         if (x >= 0 && y >= 0 && x < w && y < h)
@@ -163,7 +179,7 @@ public class MinesweeperManager : MonoBehaviour
     }
 
     // Count adjacent flags for an element
-    public static int adjacentFlags(int x, int y)
+    private static int adjacentFlags(int x, int y)
     {
         int count = 0;
 
@@ -180,7 +196,7 @@ public class MinesweeperManager : MonoBehaviour
     }
 
     // Count adjacent mines for an element
-    public static int adjacentMines(int x, int y)
+    private static int adjacentMines(int x, int y)
     {
         int count = 0;
 
@@ -197,7 +213,7 @@ public class MinesweeperManager : MonoBehaviour
     }
 
     // Flood Fill empty elements
-    public static void FFuncover(int x, int y, bool[,] visited)
+    private static void FFuncover(int x, int y, bool[,] visited)
     {
         // Coordinates in Range?
         if (x >= 0 && y >= 0 && x < w && y < h)
@@ -229,93 +245,93 @@ public class MinesweeperManager : MonoBehaviour
         }
     }
 
-    public static void Chord(int x, int y)
-    {
-        if (adjacentMines(x, y) == adjacentFlags(x, y))
-        {
-            for (int i = x - 1; i <= x + 1; i++)
-            {
-                for (int j = y - 1; j <= y + 1; j++)
-                {
-                    if (i != x || j != y)
-                    {
-                        if (i >= 0 && j >= 0 && i < w && j < h && elements[i, j].isCovered() && !elements[i, j].flag)
-                        {
-                            // Uncover element as long as it is covered and is a number
-                            if (adjacentMines(i, j) > 0 && !elements[i, j].mine)
-                            {
-                                elements[i, j].loadTexture(adjacentMines(i, j));
-                            }
-                            else if (adjacentMines(i, j) > 0 && elements[i, j].mine)
-                            {
-                                // uncovered a mine!
-                                status = "Boom!";
-                                // uncover all mines
-                                uncoverMines();
+    //    public static void Chord(int x, int y)
+    //    {
+    //        if (adjacentMines(x, y) == adjacentFlags(x, y))
+    //        {
+    //            for (int i = x - 1; i <= x + 1; i++)
+    //            {
+    //                for (int j = y - 1; j <= y + 1; j++)
+    //                {
+    //                    if (i != x || j != y)
+    //                    {
+    //                        if (i >= 0 && j >= 0 && i < w && j < h && elements[i, j].isCovered() && !elements[i, j].flag)
+    //                        {
+    //                            // Uncover element as long as it is covered and is a number
+    //                            if (adjacentMines(i, j) > 0 && !elements[i, j].mine)
+    //                            {
+    //                                elements[i, j].loadTexture(adjacentMines(i, j));
+    //                            }
+    //                            else if (adjacentMines(i, j) > 0 && elements[i, j].mine)
+    //                            {
+    //                                // uncovered a mine!
+    //                                status = "Boom!";
+    //                                // uncover all mines
+    //                                uncoverMines();
 
-                                // game over
-                                gameOver = true;
-                            }
-                            else if (elements[i, j].mine)
-                            {
-                                // uncovered a mine!
-                                status = "Boom!";
-                                // uncover all mines
-                                uncoverMines();
+    //                                // game over
+    //                                gameOver = true;
+    //                            }
+    //                            else if (elements[i, j].mine)
+    //                            {
+    //                                // uncovered a mine!
+    //                                status = "Boom!";
+    //                                // uncover all mines
+    //                                uncoverMines();
 
-                                // game over
-                                gameOver = true;
-                            }
-                            else
-                            {
-                                FFuncover(i, j, new bool[w, h]);
-                            }
+    //                                // game over
+    //                                gameOver = true;
+    //                            }
+    //                            else
+    //                            {
+    //                                FFuncover(i, j, new bool[w, h]);
+    //                            }
 
-                        }
+    //                        }
 
-                    }
-                }
-            }
-        }
-    }
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
 
-#endregion
+    #endregion
 
-    public void UpdateTexture(int index, int adjacentCount, Element elem)
-    {
-        if (elem.flag)
-            Tiles[index].sprite = IconSprites[2];
-        else if (elem.mine)
-            Tiles[index].sprite = IconSprites[3];
-        else
-            Tiles[index].sprite = NumberSprites[adjacentCount];
-        
-    }
+    //    public void UpdateTexture(int index, int adjacentCount, Element elem)
+    //    {
+    //        if (elem.flag)
+    //            Tiles[index].sprite = IconSprites[2];
+    //        else if (elem.mine)
+    //            Tiles[index].sprite = IconSprites[3];
+    //        else
+    //            Tiles[index].sprite = NumberSprites[adjacentCount];
 
-    private void ResetGrid()
-    {
-        foreach (Image tile in Tiles)
-        {
-            tile.sprite = IconSprites[0]; // set sprite to default
-        }
-    }
+    //    }
 
-    private void SetParentDimensions()
-    {
-        float size = (int)(0.8f * Screen.height);
-        TileParent.sizeDelta = new Vector2(size, size);
-    }
+    //    private void ResetGrid()
+    //    {
+    //        foreach (Image tile in Tiles)
+    //        {
+    //            tile.sprite = IconSprites[0]; // set sprite to default
+    //        }
+    //    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        SetParentDimensions();
-        ResetGrid();
-    }
+    //    private void SetParentDimensions()
+    //    {
+    //        float size = (int)(0.8f * Screen.height);
+    //        TileParent.sizeDelta = new Vector2(size, size);
+    //    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    //    // Start is called before the first frame update
+    //    void Start()
+    //    {
+    //        SetParentDimensions();
+    //        ResetGrid();
+    //    }
+
+    //    // Update is called once per frame
+    //    void Update()
+    //    {
+
+    //    }
 }
