@@ -26,15 +26,8 @@ namespace Photon.Pun.MicroGames
             InstructionPanel.SetActive(false);
         }
 
-        // Start is called before the first frame update
-        void Start()
+        private void GetTeam()
         {
-            Debug.Log("started game\n\n");
-            Debug.Log(PhotonNetwork.CurrentRoom.Name);
-
-            StartGameButton.interactable = false;
-            InstructionPanel.SetActive(true);
-
             PlayFabClientAPI.GetUserData(new GetUserDataRequest
             {
                 Keys = new List<string> { "Team" }
@@ -59,7 +52,66 @@ namespace Photon.Pun.MicroGames
                 {
                     Debug.Log("does not contain teams key");
                 }
-            }, null);            
+            }, null);
+        }
+
+        private void LoginWithDeviceId()
+        {
+            // LoginWithAndroidDeviceId, then if user doesn't have account, prompt them to create one (SHOULD IMPLEMENT LATER)
+
+            PlayFabClientAPI.LoginWithAndroidDeviceID(
+                request: new LoginWithAndroidDeviceIDRequest
+                {
+                    AndroidDevice = SystemInfo.deviceModel,
+                    AndroidDeviceId = SystemInfo.deviceUniqueIdentifier,
+                    CreateAccount = true,
+                    InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
+                    {
+                        GetCharacterInventories = false,
+                        GetCharacterList = false,
+                        GetPlayerProfile = false,
+                        GetPlayerStatistics = false,
+                        GetTitleData = true,
+                        GetUserData = true,
+                        GetUserInventory = true,
+                        GetUserReadOnlyData = false,
+                        GetUserVirtualCurrency = true
+                    },
+                    OS = SystemInfo.operatingSystem, // OS
+                    TitleId = PlayFabSettings.TitleId
+                },
+                resultCallback: OnLoginSuccess,
+                errorCallback: OnLoginFailure
+                );
+
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            Debug.Log("started game\n\n");
+
+            if (PhotonNetwork.IsConnected)
+            {
+                Debug.Log(PhotonNetwork.CurrentRoom.Name);
+            }
+            else
+            {
+                PhotonNetwork.ConnectUsingSettings();
+            }
+
+            if (PlayFabClientAPI.IsClientLoggedIn())
+            {
+                Debug.Log("client is logged in");
+                GetTeam();
+            }
+            else
+            {
+                Debug.Log("client not logged in");
+            }
+
+            StartGameButton.interactable = false;
+            InstructionPanel.SetActive(true);
         }
 
         // Update is called once per frame
@@ -78,10 +130,30 @@ namespace Photon.Pun.MicroGames
 
         #region PUN CALLBACKS
 
+        public override void OnConnectedToMaster()
+        {
+            Debug.Log("connected to master");
+        }
+
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             PhotonNetwork.LeaveRoom();
             PhotonNetwork.LoadLevel("Main");
+        }
+
+        #endregion
+
+        #region PLAYFAB CALLBACKS
+
+        public void OnLoginSuccess(LoginResult result)
+        {
+            Debug.Log("logged into PlayFab");
+            GetTeam();
+        }
+
+        public void OnLoginFailure(PlayFabError error)
+        {
+            Debug.Log("log in to PlayFab failed");
         }
 
         #endregion

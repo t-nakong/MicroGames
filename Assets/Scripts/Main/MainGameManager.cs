@@ -74,7 +74,6 @@ namespace Photon.Pun.MicroGames
             return PhotonNetwork.CurrentRoom.PlayerCount == 2;
         }
 
-
         private void ResetLobby()
         {
             PlayerRedImage.gameObject.SetActive(false);
