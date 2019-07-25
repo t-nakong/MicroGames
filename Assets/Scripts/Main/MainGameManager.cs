@@ -6,14 +6,24 @@ using UnityEngine.UI;
 
 namespace Photon.Pun.MicroGames
 {
-    public class RoomManager : MonoBehaviourPunCallbacks
+    public class MainGameManager : MonoBehaviourPunCallbacks
     {
+        [Header("Load Panel")]
+        public GameObject LoadPanel;
 
-        [Header("Selection Panel")]
-        public GameObject SelectionPanel;
+        [Header("Team Selection Panel")]
+        public GameObject TeamSelectionPanel;
+
+        [Header("Home Panel")]
+        public GameObject HomePanel;
+        public Button PlayButton;
+
+        [Header("Game Selection Panel")]
+        public GameObject GameSelectionPanel;
 
         [Header("Lobby Panel")]
         public GameObject LobbyPanel;
+        public Text GameNameText;
         public Image PlayerRedImage;
         public Text PlayerRedText;
         public Image PlayerBlueImage;
@@ -26,9 +36,11 @@ namespace Photon.Pun.MicroGames
         [Header("Games")]
         public string[] MiniGames;
 
+        [Header("Player")]
+        public string PlayerName;
+        public string PlayerTeam = "red";
+
         private Dictionary<int, GameObject> _playerListEntries;
-        private string _playerName;
-        private string _playerTeam = "red";
         private Sprite _playerSprite;
         private Sprite _opponentSprite;
         private string _specificGame = "";
@@ -37,17 +49,20 @@ namespace Photon.Pun.MicroGames
 
         #region PUBLIC
 
+        public void SetActivePanel(string activePanel)
+        {
+            LoadPanel.SetActive(activePanel.Equals(LoadPanel.name));
+            TeamSelectionPanel.SetActive(activePanel.Equals(TeamSelectionPanel.name));
+            HomePanel.SetActive(activePanel.Equals(HomePanel.name));
+            GameSelectionPanel.SetActive(activePanel.Equals(GameSelectionPanel.name));
+            LobbyPanel.SetActive(activePanel.Equals(LobbyPanel.name));
+        }
+
         public void SetPlayerName(string name)
         {
             Debug.Log("set name to " + name);
 
-            _playerName = name;
-        }
-        public void SetPlayerTeam(string team)
-        {
-            Debug.Log("set team to " + team);
-
-            _playerTeam = team;
+            PlayerName = name;
         }
 
         #endregion
@@ -59,11 +74,6 @@ namespace Photon.Pun.MicroGames
             return PhotonNetwork.CurrentRoom.PlayerCount == 2;
         }
 
-        private void SetActivePanel(string activePanel)
-        {
-            SelectionPanel.SetActive(activePanel.Equals(SelectionPanel.name));
-            LobbyPanel.SetActive(activePanel.Equals(LobbyPanel.name));
-        }
 
         private void ResetLobby()
         {
@@ -81,16 +91,17 @@ namespace Photon.Pun.MicroGames
 
         void Start()
         {
-            SetActivePanel(SelectionPanel.name);
+            PlayButton.interactable = false;
+            SetActivePanel(LoadPanel.name);
             ResetLobby();
         }
 
         void Awake()
         {
-            _playerName = "Player" + Random.Range(1000, 10000);
+            PlayerName = "Player" + Random.Range(1000, 10000);
 
             PhotonNetwork.AutomaticallySyncScene = true;
-            PhotonNetwork.LocalPlayer.NickName = _playerName;
+            PhotonNetwork.LocalPlayer.NickName = PlayerName;
             PhotonNetwork.ConnectUsingSettings();
         }
 
@@ -101,7 +112,7 @@ namespace Photon.Pun.MicroGames
         public override void OnConnectedToMaster()
         {
             Debug.Log("connected to master");
-            this.SetActivePanel(SelectionPanel.name);
+            PlayButton.interactable = true;
         }
 
         public override void OnJoinRandomFailed(short returnCode, string message)
@@ -121,17 +132,17 @@ namespace Photon.Pun.MicroGames
             if (CheckForPlayers())
             {
                 Debug.Log("enough players have joined");
-                if (_playerTeam.Equals("red"))
+                if (PlayerTeam.Equals("red"))
                 {
                     
-                    PlayerRedText.text = _playerName;
+                    PlayerRedText.text = PlayerName;
                     //PlayerRedImage.sprite = _playerSprite;
                     PlayerBlueText.text = PhotonNetwork.PlayerList[0].NickName;
                     //PlayerBlueImage.sprite = _opponentSprite;
                 }
                 else
                 {
-                    PlayerBlueText.text = _playerName;
+                    PlayerBlueText.text = PlayerName;
                     //PlayerBlueImage.sprite = _playerSprite;
                     PlayerRedText.text = PhotonNetwork.PlayerList[0].NickName;
                     //PlayerRedImage.sprite = _opponentSprite;
@@ -147,21 +158,22 @@ namespace Photon.Pun.MicroGames
             {
                 Debug.Log("not enough players have joined");
 
-                if (_playerTeam.Equals("red"))
+                if (PlayerTeam.Equals("red"))
                 {
-                    PlayerRedText.text = _playerName;
+                    PlayerRedText.text = PlayerName;
                     //PlayerRedImage.sprite = _playerSprite;
                     SearchingRedText.SetActive(false);
                     PlayerRedImage.gameObject.SetActive(true);
                 }
                 else
                 {
-                    PlayerBlueText.text = _playerName;
+                    PlayerBlueText.text = PlayerName;
                     //PlayerBlueImage.sprite = _playerSprite;
                     SearchingBlueText.SetActive(false);
                     PlayerBlueImage.gameObject.SetActive(true);
                 }
             }
+            GameNameText.text = PhotonNetwork.CurrentRoom.Name.Split(new char[] { ' ' })[0].ToUpper();
             SetActivePanel(LobbyPanel.name);
 
             /*
@@ -177,13 +189,13 @@ namespace Photon.Pun.MicroGames
         {
             Debug.Log("left room");
 
-            SetActivePanel(SelectionPanel.name);
+            SetActivePanel(GameSelectionPanel.name);
             ResetLobby();
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
-            if (_playerTeam.Equals("red"))
+            if (PlayerTeam.Equals("red"))
             {
                 PlayerBlueText.text = PhotonNetwork.PlayerList[1].NickName;
                 //PlayerBlueImage.sprite = _opponentSprite;
@@ -203,7 +215,7 @@ namespace Photon.Pun.MicroGames
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
-            if (_playerTeam.Equals("red"))
+            if (PlayerTeam.Equals("red"))
             {
                 SearchingBlueText.SetActive(true);
                 PlayerBlueImage.gameObject.SetActive(false);
@@ -225,7 +237,7 @@ namespace Photon.Pun.MicroGames
         {
             Debug.Log("attempting to join " +game_name +" room");
 
-            string other_team = _playerTeam.Equals("red") ? "blue" : "red";
+            string other_team = PlayerTeam.Equals("red") ? "blue" : "red";
             Hashtable expectedRoomProperties = new Hashtable() { { "game_name", game_name }, { "host_team", other_team } };
 
             PhotonNetwork.JoinRandomRoom(expectedRoomProperties, 2);
@@ -235,7 +247,7 @@ namespace Photon.Pun.MicroGames
         {
             Debug.Log("attempting to join random room");
 
-            string other_team = _playerTeam.Equals("red") ? "blue" : "red";
+            string other_team = PlayerTeam.Equals("red") ? "blue" : "red";
             Hashtable expectedRoomProperties = new Hashtable() { { "host_team", other_team } };
 
             PhotonNetwork.JoinRandomRoom(expectedRoomProperties, 2);
@@ -245,11 +257,11 @@ namespace Photon.Pun.MicroGames
         {
             Debug.Log("creating " + game_name + " room");
 
-            string roomName = game_name + " " + _playerName +Random.Range(1000, 10000);
+            string roomName = game_name + " " + PlayerName +Random.Range(1000, 10000);
             RoomOptions roomOptions = new RoomOptions();
             string[] roomProperties = { "game_name", "host_team" };
             roomOptions.CustomRoomPropertiesForLobby = roomProperties;
-            roomOptions.CustomRoomProperties = new Hashtable() { { "game_name", game_name }, { "host_team", _playerTeam } };
+            roomOptions.CustomRoomProperties = new Hashtable() { { "game_name", game_name }, { "host_team", PlayerTeam } };
             roomOptions.MaxPlayers = 2;
 
             _specificGame = game_name;
@@ -261,11 +273,11 @@ namespace Photon.Pun.MicroGames
             Debug.Log("creating random room");
 
             string game_name = MiniGames[Random.Range(0, MiniGames.Length)];
-            string room_name = game_name + " " + _playerName + Random.Range(1000, 10000);
+            string room_name = game_name + " " + PlayerName + Random.Range(1000, 10000);
             RoomOptions roomOptions = new RoomOptions();
             string[] roomProperties = { "game_name", "host_team" };
             roomOptions.CustomRoomPropertiesForLobby = roomProperties;
-            roomOptions.CustomRoomProperties = new Hashtable() { { "game_name", game_name }, { "host_team", _playerTeam } };
+            roomOptions.CustomRoomProperties = new Hashtable() { { "game_name", game_name }, { "host_team", PlayerTeam } };
             roomOptions.MaxPlayers = 2;
 
             _specificGame = "";
@@ -281,7 +293,7 @@ namespace Photon.Pun.MicroGames
                 _specificGame = "";
             }
 
-            SetActivePanel(SelectionPanel.name);
+            SetActivePanel(GameSelectionPanel.name);
         }
 
         public void StartGame()
