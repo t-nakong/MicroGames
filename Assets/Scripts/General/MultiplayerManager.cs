@@ -35,6 +35,7 @@ namespace Photon.Pun.MicroGames
 
         private void GetTeam()
         {
+            Debug.Log("getting team");
             PlayFabClientAPI.GetUserData(new GetUserDataRequest
             {
                 Keys = new List<string> { "Team" }
@@ -69,7 +70,7 @@ namespace Photon.Pun.MicroGames
 
             if (PhotonNetwork.IsConnected)
             {
-                Debug.Log(PhotonNetwork.CurrentRoom.Name);
+                Debug.Log(PhotonNetwork.CurrentRoom.Name +" " +PhotonNetwork.PlayerList.Length);
             }
             else
             {
