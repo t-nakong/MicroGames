@@ -800,6 +800,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4cb78b417b26b940aab3ac408b1cbaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Team: red
+  Players:
+  - {fileID: 1376933646}
+  - {fileID: 2097478432}
+  InstructionPanel: {fileID: 1494713117}
+  StartGameButton: {fileID: 1832254573}
 --- !u!4 &1789105378
 Transform:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PlayFab;
 using PlayFab.ClientModels;
+using Photon.Pun;
 
 namespace Photon.Pun.MicroGames
 {
@@ -20,6 +21,12 @@ namespace Photon.Pun.MicroGames
         protected MultiPlayer _player;
         private protected bool _gameStarted;
 
+        public void ClickStartGame()
+        {
+            photonView.RPC("RPC_StartGame", RpcTarget.AllViaServer);
+        }
+
+        [PunRPC]
         public void StartGame()
         {
             _gameStarted = true;
