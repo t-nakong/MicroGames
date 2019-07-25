@@ -19,7 +19,8 @@ namespace Photon.Pun.MicroGames
         // Start is called before the first frame update
         void Start()
         {
-            Debug.Log("started game");
+            Debug.Log("started game\n\n");
+            Debug.Log(PhotonNetwork.CurrentRoom.Name);
 
             PlayFabClientAPI.GetUserData(new GetUserDataRequest
             {

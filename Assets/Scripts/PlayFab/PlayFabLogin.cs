@@ -47,6 +47,11 @@ namespace Photon.Pun.MicroGames
             }, null, null);
         }
 
+        void Awake()
+        {
+            DontDestroyOnLoad(this.gameObject);
+        }
+
         // Start is called before the first frame update
         void Start()
         {
