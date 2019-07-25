@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class StartButton : MonoBehaviour
 {
-    private void OnMouseUpAsButton()
-    {
+    //private void OnMouseUpAsButton()
+    //{
 
-        PlayField.resetBoard += PlayField.w * PlayField.h;
-        PlayField.gameOver = false;
-    }
-    void Start()
-    { 
-    }
+    //    PlayField.resetBoard += PlayField.w * PlayField.h;
+    //    PlayField.gameOver = false;
+    //}
+    //void Start()
+    //{ 
+    //}
 }
 

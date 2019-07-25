@@ -17,22 +17,12 @@ public class Element : MonoBehaviour
 
 
     // Is it still covered?
-    //public bool isCovered()
-    //{
-    //    return GetComponent<SpriteRenderer>().sprite.texture.name == "default" || GetComponent<SpriteRenderer>().sprite.texture.name == "flag";
-    //}
+    public bool isCovered()
+    {
+        return GetComponent<SpriteRenderer>().sprite.texture.name == "default" || GetComponent<SpriteRenderer>().sprite.texture.name == "flag";
+    }
 
 
-    //// Load another texture
-    //public void loadTexture(int adjacentCount)
-    //{
-    //    if (flag)
-    //        GetComponent<SpriteRenderer>().sprite = flagTexture;
-    //    else if (mine)
-    //        GetComponent<SpriteRenderer>().sprite = mineTexture;
-    //    else
-    //        GetComponent<SpriteRenderer>().sprite = emptyTextures[adjacentCount];
-    //}
 
     //void OnMouseOver()
     //{
@@ -116,20 +106,36 @@ public class Element : MonoBehaviour
     ////    }
     ////}
 
+   
+
     // Use this for initialization
     void Start()
     {
-        ReRoll();
+        ReRoll(MinesweeperManager.density);
     }
+    private void ReRoll(double density)
+    {
+        // Randomly decide if it's a mine or not
+        mine = Random.value < density;
+        flag = false;
+        covered = true;
+        // Register in Grid
+        int x = (int)transform.position.x;
+        int y = (int)transform.position.y;
+        GetComponent<SpriteRenderer>().sprite = defaultTexture;
+
+        MinesweeperManager.elements[x, y] = this;
+    }
+
 
     private void Update()
     {
         print("Called update");
-        if (PlayField.resetBoard > 0)
+        if (MinesweeperManager.resetBoard > 0)
         {
-            PlayField.resetBoard--;
-            PlayField.isOpened = false;
-            ReRoll(PlayField.density);
+            MinesweeperManager.resetBoard--;
+            MinesweeperManager.isOpened = false;
+            ReRoll(MinesweeperManager.density);
 
         }
     }

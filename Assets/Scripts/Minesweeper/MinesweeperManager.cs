@@ -47,12 +47,13 @@ public class MinesweeperManager : MonoBehaviour
 
         if (!gameOver)
         {
-           if (isFlagging) // In flagging mode
+            if (isFlagging) // In flagging mode
             {
                 if (e.flag)
                 {
                     e.flag = false;
-                } else
+                }
+                else
                 {
                     e.flag = true;
                 }
@@ -94,7 +95,7 @@ public class MinesweeperManager : MonoBehaviour
                 }
             }
 
-            
+
             //else if (GetComponent<SpriteRenderer>().sprite.texture.name == "flag")
             //{
             //    // Do nothing
@@ -121,46 +122,52 @@ public class MinesweeperManager : MonoBehaviour
             //}
         }
     }
-    //    private static void uncoverMines()
-    //    {
-    //        foreach (Element elem in elements)
-    //        {
-    //            if (elem.mine) elem.loadTexture(0);
-    //        }
-    //        isOpened = true;
-    //    }
 
-    //    private static void sendAction(int time)
-    //    {
-    //        // TODO sending interactions to enemy
-    //        enemyStatus = "Affected";
-    //    }
-
-    //    private static bool isFinished()
-    //    {
-    //        // Try to find a covered element that is no mine
-    //        foreach (Element elem in elements)
-    //            if (elem.isCovered() && !elem.mine)
-    //                return false;
-    //        // There are none => all are mines => game won.
-    //        gameOver = true;
-    //        return true;
-    //    }
-
-    private void ReRoll(Element elem)
+    // Load another texture
+    //private void loadTexture(int adjacentCount, GameObject g)
+    //{
+    //    Element e = g.GetComponent<Element>();
+    //    Image i = g.GetComponent<Image>();
+    //    if (e.flag)
+    //        i.sprite = e.flagTexture;
+    //    else if (e.mine)
+    //        i.sprite = e.mineTexture;
+    //    else
+    //        i.sprite = e.emptyTextures[adjacentCount];
+    //}
+    private static void loadTexture()
     {
-        // Randomly decide if it's a mine or not
-        elem.mine = Random.value < density;
-        elem.flag = false;
-        elem.covered = true;
-        // Register in Grid
-        int x = (int)transform.position.x;
-        int y = (int)transform.position.y;
-        GetComponent<SpriteRenderer>().sprite = defaultTexture;
 
-        PlayField.elements[x, y] = this;
     }
 
+
+    private static void uncoverMines()
+    {
+        foreach (Element elem in elements)
+        {
+            //if (elem.mine) elem.loadTexture(0, );
+        }
+        isOpened = true;
+    }
+
+    private static void sendAction(int time)
+    {
+        // TODO sending interactions to enemy
+        enemyStatus = "Affected";
+    }
+
+    private static bool isFinished()
+    {
+        // Try to find a covered element that is no mine
+        foreach (Element elem in elements)
+            if (elem.isCovered() && !elem.mine)
+                return false;
+        // There are none => all are mines => game won.
+        gameOver = true;
+        return true;
+    }
+
+    
     private static bool flagAt(int x, int y)
     {
         // Coordinates in range? Then check for flag.
@@ -224,8 +231,8 @@ public class MinesweeperManager : MonoBehaviour
 
             // uncover element
             if (elements[x, y].isCovered())
-                elements[x, y].loadTexture(adjacentMines(x, y));
-
+                //loadTexture(adjacentMines(x, y));
+                loadTexture();
             // close to a mine? then no more work needed here
             if (adjacentMines(x, y) > 0)
                 return;
