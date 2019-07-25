@@ -14,6 +14,8 @@ namespace Photon.Pun.MicroGames
         // Start is called before the first frame update
         void Start()
         {
+            Debug.Log("started game");
+            Debug.Log(PLAYER_TEAM);
             if (PLAYER_TEAM.Equals("red"))
             {
                 _player = Players[0];
